@@ -1,23 +1,25 @@
-var dropTarget = document.querySelector(".wrapper");
-var draggables = document.querySelectorAll(".task");
+function onDragStart(event) {
+  event.dataTransfer.setData("text/plain", event.currentTarget.dataset.table);
+  event.currentTarget.style.backgroundColor = "#e9c46a";
+}
 
-draggables.forEach(element => {
-    element.addEventListener("dragstart", function (ev) {
-        ev.dataTransfer.setData("srcId", ev.target.id);
-    });
-});
+function onDragEnd(event) {
+  event.currentTarget.style.backgroundColor = "#2a9d8f";
+}
 
-dropTarget.addEventListener('dragover', function (ev) {
-    ev.preventDefault();
-});
+function onDragOver(event) {
+  event.preventDefault();
+}
 
-dropTarget.addEventListener('drop', function (ev) {
-    ev.preventDefault();
-    let target = ev.target;
-    let droppable = target.classList.contains('box');
-    let srcId = ev.dataTransfer.getData("srcId");
+function onDrop(event) {
+  const dropzone = document.getElementById("dropzone");
 
-    if (droppable) {
-        ev.target.appendChild(document.getElementById(srcId));
-    }
-});
+  let id = event.dataTransfer.getData("text");
+
+  const draggableElement = document.getElementById(id);
+  const clone = draggableElement.cloneNode(true);
+
+  dropzone.appendChild(clone);
+
+  event.dataTransfer.clearData();
+}
